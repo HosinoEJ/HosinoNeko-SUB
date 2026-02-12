@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<head>
+    <style>
+        #markdown h1,h2,h3,h4,h5,h6{
+            padding-bottom: 0.3em;
+            padding-top: 0.3em;
+        }
+        #markdown h1,h2,h3{
+            border-bottom: 1px solid #bcbcbc;
+        }
+        #POST{
+            display: flex
+;
+    flex-direction: column;
+    align-items: center;
+        }
+        #POST *{
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<html lang="zh_tw"><!--這裏的lang可以控制字體的，相對來説重要一些-->
+    <%- include('partials/head') %>
+    <body><!--class="center_PG"的意思是讓這個頁面居中對齊，否則自己用display設定版面（可選）-->
+            <%- include('partials/MTF') %>
+            <main class="main">
+                <%- include('partials/header') %>
+                <div class="DivStyle-Glass port" id="markdown">
+                    
+                    <form action="/subscribe-post" method="POST" id="POST">
+                        <div>
+                            郵箱：<input type="email" id="email" name="email" value="<%= user.email || '' %>" placeholder="example@mail.com" required>
+                            <button type="button" id="sendCodeBtn">獲取驗證碼</button>
+                        </div>
+
+                        <div id="psCodeSection" style="display:none; background: #f0f0f0; padding: 10px; margin: 10px 0;">
+                            請輸入驗證碼：<input type="text" id="inputCode" placeholder="6 位數字">
+                            <button type="button" id="verifyCodeBtn">確認驗證</button>
+                            <p id="msg" style="color: red; margin: 5px 0;"></p>
+                        </div>
+
+                        <fieldset id="formFields" disabled style="border: none; padding: 0; margin: 0;">
+                            <div>性：<input type="text" name="firstname" value="<%= user.firstname || '' %>" placeholder="Hosino" required></div>
+                            名：<input type="text" name="Lastname" value="<%= user.lastname || '' %>" placeholder="Neko" required>
+                            
+                            語言：<input type="text" list="typelist" name="language" value="<%= user.language || '' %>" required>
+                            <datalist id="typelist">
+                                <option>正體中文</option>
+                                <option>簡體中文</option>
+                                <option>English</option>
+                                <option>日本語</option>
+                            </datalist>
+
+                            是否訂閱更改性質的推送？
+                            <input type="radio" name="mod-sub" id="mod-sub-t" value="true" required 
+                                <%= user.modSub === 'true' ? 'checked' : '' %>>
+                            <label for="mod-sub-t">TRUE</label>
+
+                            <input type="radio" name="mod-sub" id="mod-sub-f" value="false" required 
+                                <%= user.modSub === 'false' ? 'checked' : '' %>>
+                            <label for="mod-sub-f">FALSE</label>
+
+                            <br><br>
+                            <button type="submit" class="button1">
+                                <%= user.email ? '儲存修改' : '送出訂閱' %>
+                            </button>
+                        </fieldset>
+                    </form>
+
+
+                </div>
+            </main>
+            <%- include('partials/footer') %>
+        <%- include('partials/footer_JS') %>
+
+
+        <script>
+            const emailInput = document.getElementById('email');
+            const sendBtn = document.getElementById('sendCodeBtn');
+            const verifyBtn = document.getElementById('verifyCodeBtn');
+            const psSection = document.getElementById('psCodeSection');
+            const formFields = document.getElementById('formFields');
+            const msg = document.getElementById('msg');
+
+            // 1. 獲取驗證碼 (Ps Code: Mail to Passcode)
+            sendBtn.addEventListener('click', async () => {
+                if(!emailInput.value) return alert('請輸入郵箱');
+                
+                const res = await fetch('/send-ps-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: emailInput.value })
+                });
+
+                if(res.ok) {
+                    psSection.style.display = 'block';
+                    alert('驗證碼已寄出，請檢查郵箱！');
+                } else {
+                    alert('寄送失敗，請稍後再試');
+                }
+            });
+
+            // 2. 驗證代碼 (Passcode == Inputcode)
+            verifyBtn.addEventListener('click', async () => {
+                const code = document.getElementById('inputCode').value;
+                const email = emailInput.value;
+
+                const res = await fetch(`/subscribe-verify?mail=${email}&token=${code}`);
+                
+                if (res.ok) {
+                    const userData = await res.json();
+                    
+                    // --- 核心邏輯：驗證成功後 ---
+                    formFields.disabled = false; // 解鎖表單 (繼續流程)
+                    emailInput.readOnly = true;  // 鎖定 Email
+                    psSection.style.display = 'none'; // 隱藏驗證區
+                    
+                    if (userData.exists) {
+                        // 既有用戶：自動填充 (自動填充框)
+                        document.getElementsByName('firstname')[0].value = userData.firstname;
+                        document.getElementsByName('Lastname')[0].value = userData.lastname;
+                        document.getElementsByName('language')[0].value = userData.language;
+                        if(userData.modSub === 'true') document.getElementById('mod-sub-t').checked = true;
+                        if(userData.modSub === 'false') document.getElementById('mod-sub-f').checked = true;
+                        alert('驗證成功！已為您加載現有設定。');
+                    } else {
+                        alert('驗證成功！歡迎新用戶，請完成下方資料填寫。');
+                    }
+                } else {
+                    msg.innerText = "驗證碼不正確或已失效 (Faild)";
+                }
+            });
+            </script>
+    </body>
+</html>
