@@ -1,10 +1,17 @@
+#注意！老子實在太懶了，README是ai寫的，僅供參考！
+
+
 # HosinoNeko-SUB
 
-一個簡潔而強大的訂閱管理服務，基於 Node.js 和 Express 框架構建。
+星野醬牌訂閱伺服器
+
+簡單 好用
+
+基於 Node.js 和 Express 框架構建。
 
 ## 📋 項目概述
 
-HosinoNeko-SUB 是一個專業的訂閱內容管理系統，提供靈活的 API 端點用於管理和分發訂閱內容。該項目採用現代化的 JavaScript 技術棧，確保高性能和易於擴展。
+HosinoNeko-SUB 是一個訂閱內容管理系統，提供靈活的 API 端點用於管理和分發訂閱內容。該項目採用現代化的 JavaScript 技術棧，確保高性能和易於擴展。
 
 ## ✨ 主要特性
 
@@ -19,21 +26,6 @@ HosinoNeko-SUB 是一個專業的訂閱內容管理系統，提供靈活的 API 
 - **框架**: Express.js
 - **包管理**: npm
 - **許可證**: Apache License 2.0
-
-## 📁 項目結構
-
-```
-HosinoNeko-SUB/
-├── server.js          # 主服務器文件
-├── sub.json           # 訂閱配置文件
-├── package.json       # 項目依賴配置
-├── package-lock.json  # 依賴鎖定文件
-├── .env               # 環境變量配置（私密）
-├── .gitignore         # Git 忽略規則
-├── LICENSE            # Apache 2.0 許可證
-├── public/            # 靜態資源目錄
-└── views/             # 視圖模板目錄
-```
 
 ## 🚀 快速開始
 
@@ -65,11 +57,7 @@ HosinoNeko-SUB/
    ```bash
    npm start
    ```
-   或使用開發模式：
-   ```bash
-   node server.js
-   ```
-
+   
 服務器將在配置的端口啟動，通常為 `http://localhost:3000` (具體端口詳見 `.env` 配置)
 
 ## 📝 配置說明
