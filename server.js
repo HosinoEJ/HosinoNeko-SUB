@@ -82,6 +82,7 @@ app.get('/subscribe', async (req, res) => {
 app.post('/send-ps-code', async (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).send('Email required');
+    const from_mail = process.env.EMAIL_USER;
 
     // 生成 6 位數驗證碼
     const code = Math.floor(100000 + Math.random() * 900000).toString();
@@ -89,7 +90,7 @@ app.post('/send-ps-code', async (req, res) => {
 
     try {
             await transporter.sendMail({
-                from: '"HosinoNeko" <gotoueijiro@qq.com>', 
+                from: `"HosinoNeko" <${from_mail}>`, 
                 to: email,
                 subject: "您的驗證碼",
                 html: `<h3>您的驗證碼為：<b>${code}</b>，10 分鐘內有效。</h3><p>敬上：星野眠子</p>`
@@ -119,7 +120,7 @@ app.post('/subscribe-post', async (req, res) => {
     }
 
     await fs.writeFile('./sub.json', JSON.stringify(subs, null, 2));
-    res.send("訂閱成功！已記錄至 Sub Log。");
+    res.send("SUCCESS");
 });
 
 
@@ -146,17 +147,71 @@ app.get('/subscribe-verify', async (req, res) => {
 
 
 
-app.post('/api/webhook', (req, res) => {//github webhook api處理
+app.post('/api/webhook', async (req, res) => {//github webhook api處理
+    const from_mail = process.env.EMAIL_USER;
+
+    //防止有傻逼盜用token
+    const token = req.headers['x-hosino-token'];
+    if (token !== process.env.WEBHOOK_SECRET) {
+        return res.status(403).send('Forbidden');
+    }
+
+
+
     try {
-        const { added_files, modified_files } = req.body;
+        const { added_files, modified_files, compare } = req.body; // 從 body 拿 compare 連結
 
-        // 轉換為陣列並過濾空字串
-        const added = added_files ? added_files.split(',').filter(Boolean) : [];
-        const modified = modified_files ? modified_files.split(',').filter(Boolean) : [];
+        // 1. 處理檔名：只取最後一個斜槓後的內容
+        const formatFiles = (filesStr) => {
+            if (!filesStr) return [];
+            return filesStr.split(',')
+                .filter(Boolean)
+                .map(path => path.split('/').pop()); // 這裡把路徑修掉
+        };
 
-        console.log('--- 驗證成功 ---');
+        const added = formatFiles(added_files);
+        const modified = formatFiles(modified_files);
+
+        const commitUrl = compare || "https://github.com/HosinoEJ/HosinoEJ";
+
+        console.log('--- 文章更新！ ---');
         console.log('新增:', added);
         console.log('修改:', modified);
+
+        const subscribers = JSON.parse(await fs.readFile('./sub.json', 'utf-8'));
+
+        for (const user of subscribers) {
+            if (user.modSub === "true" && modified.length > 0 ){//發修改資訊
+                console.log(`M mail to ${user.email}`)
+                const fileNames = [...modified].join('、');
+                await transporter.sendMail({
+                    from:`"HosinoNeko"<${from_mail}>`,
+                    to: user.email,
+                    subject: '有修改的文章',
+                    html: `<p>${user.lastname}醬！</p>
+                        <p>你訂閱的 HosinoNeko 有文章 <b>${fileNames}</b> 有更新，需不需要查看一下修改的具體內容喵？</p>
+                        <p>👉 <a href="${commitUrl}">點擊這裡查看詳細修改內容</a></p>
+                        <br>
+                        <p>祝你有美好的一天喵～🐾</p>
+                        <p>你的：HosinoNeko</p>`
+                })
+            }
+            if (added.length > 0){
+                console.log(`A mail to ${user.email}`)
+                const fileNames = [...added].join('、');
+                await transporter.sendMail({
+                    from:`"HosinoNeko"<${from_mail}>`,
+                    to: user.email,
+                    subject: '有新的文章發佈！',
+                    html: `<p>${user.lastname}醬！</p>
+                        <p>你訂閱的 HosinoNeko 有新的文章啦： <b>${fileNames}</b></p>
+                        <p>👉 <a href="${commitUrl}">點擊這裡查看詳細修改內容</a></p>
+                        <br>
+                        <p>祝你有美好的一天喵～🐾</p>
+                        <p>你的：<a href="hosinoneko.me">HosinoNeko</a></p>`
+                })
+            }
+        }
 
         res.status(200).json({ status: 'ok' });
     } catch (error) {
@@ -165,7 +220,7 @@ app.post('/api/webhook', (req, res) => {//github webhook api處理
     }
 });
 
-const port = process.env.PORT
+const port = 3000//process.env.PORT
 app.listen(port, () => {
     console.log(`SERVER 運行在 port ${port}`);
 });
