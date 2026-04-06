@@ -1,126 +1,89 @@
-#注意！老子實在太懶了，README是ai寫的，僅供參考！
+# HosinoNeko Blog Subscription & Notification System
 
+這是一個基於 **Node.js (Express)** 的訂閱管理系統，結合了 **GitHub Actions** 實現自動化的文章更新通知。當你在指定目錄下更新文章時，系統會自動抓取變動並寄信給所有訂閱者。
 
-# HosinoNeko-SUB
+## 🚀 功能特點
 
-星野醬牌訂閱伺服器
-
-簡單 好用
-
-基於 Node.js 和 Express 框架構建。
-
-## 📋 項目概述
-
-HosinoNeko-SUB 是一個訂閱內容管理系統，提供靈活的 API 端點用於管理和分發訂閱內容。該項目採用現代化的 JavaScript 技術棧，確保高性能和易於擴展。
-
-## ✨ 主要特性
-
-- 🚀 **高性能服務器** - 基於 Express.js 構建的輕量級 API 服務
-- 📱 **RESTful API** - 簡潔的 API 設計，易於集成
-- ⚙️ **環境配置** - 支持 `.env` 環境變量配置
-- 📦 **依賴管理** - 完整的 npm 包管理配置
-
-## 🛠️ 技術棧
-
-- **運行時**: Node.js
-- **框架**: Express.js
-- **包管理**: npm
-- **許可證**: Apache License 2.0
-
-## 🚀 快速開始
-
-### 前置要求
-
-- Node.js (推薦 v14 或更高版本)
-- npm (通常隨 Node.js 一起安裝)
-
-### 安裝步驟
-
-1. **克隆倉庫**
-   ```bash
-   git clone https://github.com/HosinoEJ/HosinoNeko-SUB.git
-   cd HosinoNeko-SUB
-   ```
-
-2. **安裝依賴**
-   ```bash
-   npm install
-   ```
-
-3. **配置環境變量**
-   ```bash
-   # 複製 .env 文件或創建新的
-   # 根據你的需要修改配置
-   ```
-
-4. **啟動服務器**
-   ```bash
-   npm start
-   ```
-   
-服務器將在配置的端口啟動，通常為 `http://localhost:3000` (具體端口詳見 `.env` 配置)
-
-## 📝 配置說明
-
-### .env 文件
-
-在根目錄創建 `.env` 文件來配置應用：
-
-```env
-# 服務器配置
-PORT=3000
-NODE_ENV=development
-
-# 根據需要添加其他配置項
-```
-
-### sub.json
-
-`sub.json` 文件包含訂閱配置信息，用於管理和分發訂閱內容。
-
-## 🔌 API 端點
-
-詳細的 API 端點文檔請查看 `server.js` 文件。基本架構包括：
-
-- GET 端點 - 獲取訂閱信息
-- POST 端點 - 創建新訂閱
-- PUT 端點 - 更新訂閱信息
-- DELETE 端點 - 刪除訂閱
-
-*具體端點列表待補充*
-
-## 📚 相關資源
-
-- [Node.js 文檔](https://nodejs.org/)
-- [Express.js 文檔](https://expressjs.com/)
-- [npm 文檔](https://docs.npmjs.com/)
-
-## 📄 許可證
-
-本項目採用 **Apache License 2.0** 許可證。詳見 [LICENSE](LICENSE) 文件。
-
-## 🤝 貢獻
-
-歡迎提交 Issue 和 Pull Request！請遵循以下步驟：
-
-1. Fork 此倉庫
-2. 創建你的特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 開啟 Pull Request
-
-## 💬 聯繫方式
-
-如有問題或建議，歡迎通過以下方式聯繫：
-
-- GitHub Issues: [提交 Issue](https://github.com/HosinoEJ/HosinoNeko-SUB/issues)
-- GitHub Discussions: [參與討論](https://github.com/HosinoEJ/HosinoNeko-SUB/discussions)
-
-## 📊 項目狀態
-
-- ✅ 正在積極開發中
-- 📝 歡迎反饋和改進建議
+* **訂閱管理**：支援訂閱者資料的新增與更新（存儲於 `sub.json`）。
+* **安全驗證**：透過 Email 發送 6 位數驗證碼，確保訂閱者身份真實性。
+* **自動化通知**：監控 GitHub 倉庫變動，自動發送新文章發佈或舊文章修改的通知郵件。
+* **雙重模組支援**：可區分一般訂閱與特定的「文章修改」追蹤。
 
 ---
 
-**最後更新**: 2026-02-12 15:15:34
+## 🛠️ 技術棧
+
+* **Backend**: Node.js, Express
+* **Templating**: EJS
+* **Automation**: GitHub Actions (Workflow)
+* **Database**: 檔案式存儲 (`sub.json`)
+* **Email**: Nodemailer (SMTP)
+
+---
+
+## 📂 專案結構
+
+* `app.js` (或 `server.js`): 主要的 Express 邏輯與 API 路由。
+* `sub.json`: 存放訂閱者名單的 JSON 資料庫。
+* `.github/workflows/notify.yml`: GitHub Actions 設定檔。
+* `views/`: 存放 `.ejs` 頁面模板。
+
+---
+
+## ⚙️ 環境變數設定 (.env)
+
+在部署前，請確保在根目錄建立 `.env` 檔案並填寫以下資訊：
+
+```env
+# 郵件伺服器
+SMTP_HOST=smtp.your-provider.com
+SMTP_PORT=465
+SMTP_SECURE=true
+EMAIL_USER=your-email@example.com
+EMAIL_PASS=your-app-password
+
+# Webhook 安全密鑰 (需與 GitHub Secrets 一致)
+WEBHOOK_SECRET=your_secret_token
+```
+
+---
+
+## 🤖 GitHub Actions 配置
+
+為了實現自動化通知，請在 GitHub 倉庫的 **Settings > Secrets and variables > Actions** 中新增：
+
+1.  名稱：`WEBHOOK_SECRET`
+2.  值：對應你 `.env` 中的 `WEBHOOK_SECRET`。
+
+### 工作流程說明：
+每當 `main` 分支下的 `public/prot/` 目錄有檔案變動時，Workflow 會：
+1.  比對 Git Diff 找出新增 (`added`) 與修改 (`modified`) 的檔案清單。
+2.  將檔案清單、Commit ID 與比對連結封裝成 JSON。
+3.  向你的 API 發送 `POST` 請求，觸發後端寄信邏輯。
+
+---
+
+## ⚓ API 路由參考
+
+| 方法 | 路徑 | 說明 |
+| :--- | :--- | :--- |
+| `GET` | `/` | 訂閱首頁。 |
+| `POST` | `/send-ps-code` | 發送 6 位數驗證碼至使用者信箱。 |
+| `GET` | `/subscribe-verify` | 驗證 Token 並取得訂閱者現有資料（自動填充用）。 |
+| `POST` | `/subscribe-post` | 提交/更新訂閱資訊。 |
+| `POST` | `/api/webhook` | 接收 GitHub Actions 的通知，執行群發郵件任務。 |
+
+---
+
+## 📝 快速啟動
+
+1.  **安裝依賴**：
+    ```bash
+    npm install
+    ```
+2.  **初始化資料**：
+    確保根目錄有一個 `sub.json`，內容初始化為 `[]`。
+3.  **啟動伺服器**：
+    ```bash
+    node app.js
+    ```
