@@ -1,0 +1,16 @@
+# Cloudflare Pages configuration
+
+[build]
+command = "echo 'No build needed'"
+publish = "public"
+
+[functions]
+directory = "functions"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hosinoneko-subscribers"
+database_id = "your-database-id-here"
+
+[env]
+ENVIRONMENT = "production"
