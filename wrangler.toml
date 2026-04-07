@@ -1,0 +1,20 @@
+name = "hosinoneko-sub"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hosinoneko-subscribers"
+database_id = "your-database-id-here"
+
+[vars]
+ENVIRONMENT = "production"
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+[env.production]
+name = "hosinoneko-sub"
+
+[env.production.vars]
+ENVIRONMENT = "production"

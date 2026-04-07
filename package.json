@@ -1,8 +1,15 @@
 {
-  "dependencies": {
-    "dotenv": "^17.2.4",
-    "ejs": "^4.0.1",
-    "express": "^5.2.1",
-    "nodemailer": "^8.0.1"
+  "name": "hosinoneko-sub",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:init": "wrangler d1 execute hosinoneko-subscribers --file=./schema.sql",
+    "db:migrate": "wrangler d1 migrations apply hosinoneko-subscribers"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "wrangler": "^3.0.0"
   }
 }
