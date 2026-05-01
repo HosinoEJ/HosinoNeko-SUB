@@ -110,3 +110,6 @@ const port = 3000//process.env.PORT
 app.listen(port, '0.0.0.0', () => {
     console.log(`SERVER 運行在 port ${port}`);
 });
+
+module.exports = app;
+module.exports.handler = serverless(app);
