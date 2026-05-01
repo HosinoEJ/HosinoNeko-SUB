@@ -52,7 +52,7 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
         }
         
 
-        const commitUrl = compare || "https://github.com/HosinoEJ/HosinoNeko-SUB-SEND";
+        const commitUrl = compare || "https://github.com/HosinoEJ/HosinoNeko-SUB";
 
         console.log('--- 文章更新！ ---');
         console.log('新增:', added);
