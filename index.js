@@ -46,10 +46,10 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
         };
         if(Array.isArray(added_files) && added_files.length > 0){
             const added = added_files.map(file => formatFiles(file));
-        }
+        }else{const added = added_files}
         if(Array.isArray(modified_files) && modified_files.length > 0){
             const modified = modified_files.map(file => formatFiles(file));
-        }
+        }else{const modified = modified_files}
         
 
         const commitUrl = compare || "https://github.com/HosinoEJ/HosinoNeko-SUB";
