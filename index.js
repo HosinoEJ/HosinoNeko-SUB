@@ -42,12 +42,14 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
         const raw_modified = headCommit.modified || [];
         const compare = payload.compare || "https://github.com/HosinoEJ/HosinoNeko-SUB";
 
-            
+
         const cleanFileName = (filePath) => {
             if (typeof filePath !== 'string') return filePath;
             // 先取最後一個斜槓後的內容，再去掉 .md
             return filePath.split('/').pop().replace(/\.md$/, '');
         };
+        const added = raw_added.map(cleanFileName);
+        const modified = raw_modified.map(cleanFileName);
         
 
         const commitUrl = compare || "https://github.com/HosinoEJ/HosinoNeko-SUB";
