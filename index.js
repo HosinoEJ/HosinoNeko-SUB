@@ -72,7 +72,7 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
                         to: user.email,
                         subject: '有修改的文章',
                         html: `<p>${user.lastname}醬！</p>
-                            <p>你訂閱的 HosinoNeko 有文章 <b>${fileNames}</b> 有更新，需不需要查看一下修改的具體內容喵？</p>
+                            <p>你訂閱的 HosinoNeko 有文章 <b><a href="https://hosinoneko.me/#/blog/${fileNames}">${fileNames}</a></b> 有更新，需不需要查看一下修改的具體內容喵？</p>
                             <p>👉 <a href="${commitUrl}">點擊這裡查看詳細修改內容</a></p>
                             <br>
                             <p>祝你有美好的一天喵～🐾</p>
@@ -87,7 +87,7 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
                         to: user.email,
                         subject: '有新的文章發佈！',
                         html: `<p>${user.lastname}醬！</p>
-                            <p>你訂閱的 HosinoNeko 有新的文章啦： <b>${fileNames}</b></p>
+                            <p>你訂閱的 HosinoNeko 有新的文章啦： <b><a href="https://hosinoneko.me/#/blog/${fileNames}">${fileNames}</a></b></p>
                             <p>👉 <a href="${commitUrl}">點擊這裡查看詳細修改內容</a></p>
                             <br>
                             <p>祝你有美好的一天喵～🐾</p>
