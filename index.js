@@ -48,7 +48,7 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
         const added = formatFiles(added_files);
         const modified = formatFiles(modified_files);
 
-        const commitUrl = compare || "https://github.com/HosinoEJ/HosinoEJ";
+        const commitUrl = compare || "https://github.com/HosinoEJ/HosinoNeko-SUB-SEND";
 
         console.log('--- 文章更新！ ---');
         console.log('新增:', added);
@@ -61,7 +61,9 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
         const response = await fetch(GAS_URL);
         if (!response.ok) throw new Error('無法獲取訂閱名單');
         const subscribers = await response.json();
+        console.log(subscribers)
         console.log(`找到 ${subscribers.length} 位訂閱者`);
+        for(const user of subscribers) {console.log(user.email)}
 
         for (const user of subscribers) {
             try{
@@ -110,13 +112,16 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
 
 app.get('/test-mail', async (req, res) => {
     try {
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: process.env.EMAIL_USER, // 寄給自己
-            subject: 'SMTP 測試',
-            text: '如果你看到這封信，代表 SMTP 設定成功了喵！'
-        });
-        res.send('測試信已發送！');
+        if(process.env.DEV_MODE === 'true'){
+            await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: process.env.EMAIL_USER, // 寄給自己
+                subject: 'SMTP 測試',
+                text: '如果你看到這封信，代表 SMTP 設定成功了喵！'
+            });
+            res.send('測試信已發送！');
+        }
+        else{res.send('<h1>我操你媽，我操死你血媽</h1><p>操死你的嗎就你他媽的知道這個路由唄，想刷存在感的給我滾遠點</p><p>喔，你忘了在.env中加DEV_MODE=true嗎，那沒..<b>操你媽活該被駡</b></p>')}//上綫後如果有傻逼進入到了這個路由，防止開發者郵箱被塞爆
     } catch (err) {
         res.status(500).send('發送失敗: ' + err.message);
     }
