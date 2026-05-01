@@ -102,6 +102,20 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
     }
 });
 
+app.get('/test-mail', async (req, res) => {
+    try {
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_USER, // 寄給自己
+            subject: 'SMTP 測試',
+            text: '如果你看到這封信，代表 SMTP 設定成功了喵！'
+        });
+        res.send('測試信已發送！');
+    } catch (err) {
+        res.status(500).send('發送失敗: ' + err.message);
+    }
+});
+
 app.get('/', (req,res) => {
     res.json({ success: true })
 })
