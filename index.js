@@ -45,8 +45,8 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
                 .map(path => path.split('/').pop()); // 這裡把路徑修掉
         };
 
-        const added = formatFiles(added_files);
-        const modified = formatFiles(modified_files);
+        const added = path.parse(formatFiles(added_files)).name;
+        const modified = path.parse(formatFiles(modified_files)).name;
 
         const commitUrl = compare || "https://github.com/HosinoEJ/HosinoNeko-SUB-SEND";
 
