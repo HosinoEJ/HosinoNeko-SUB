@@ -65,7 +65,7 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
 
         for (const user of subscribers) {
             try{
-                if (user.modSub == "true" && modified.length > 0 ){//發修改資訊
+                if (user.modSub == true && modified.length > 0 ){//發修改資訊
                     console.log(`M mail to ${user.email}`)
                     const fileNames = [...modified].join('、');
                     await transporter.sendMail({
