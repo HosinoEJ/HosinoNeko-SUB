@@ -37,7 +37,6 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
     try {
         const { added_files, modified_files, compare } = req.body;
 
-        // 2. 建立一個強大的格式化工具
         const processFiles = (rawStr) => {
             if (!rawStr || typeof rawStr !== 'string') return [];
             
@@ -47,7 +46,6 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
                            .replace(/\.md$/, '')); // 4. 去掉 .md
         };
 
-        // 3. 得到乾淨的陣列
         const added = processFiles(added_files);
         const modified = processFiles(modified_files);
         

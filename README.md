@@ -11,8 +11,7 @@
 *   **雲端名單管理**：捨棄本地 JSON，改用 **Google Sheets** 管理訂閱者名單，方便隨時編輯。
 *   **安全驗證**：透過 `x-hosino-token` 驗證 Webhook 來源，確保 API 安全性。
 *   **自動化通知**：監控 GitHub 倉庫變動，自動發送新文章發佈或舊文章修改的通知郵件。
-*   **高效發送**：採用異步併發處理郵件任務，縮短大規模發送的等待時間。
-*   **擬人化通知**：內建親切的「喵」語氣模板，增加與讀者的互動感。
+*   **高效發送**：採用異步併發處理郵件任務，縮短大規模發送的等待時間。（嗎）
 
 ---
 
@@ -36,28 +35,7 @@
 
 ## ⚙️ 環境變數設定 (.env)
 
-請在根目錄建立 `.env` 檔案並填入以下資訊：
-```env
-# 伺服器設定
-PORT=3000#(目前程式碼寫死 3000，但建議保留此項以便日後擴充)
-#DEV_MODE=false#開發模式，默認關閉
-
-# SMTP 郵件伺服器設定
-# 如果使用 Gmail，host 通常是 smtp.gmail.com，port 是 465 (secure: true)
-SMTP_HOST=smtp.example.com
-SMTP_PORT=465
-SMTP_SECURE=true
-
-# 寄件人信箱與密碼 (密碼通常是 App Specific Password)
-EMAIL_USER=your-email@example.com
-EMAIL_PASS=your-app-password-here
-
-# GitHub Webhook 安全驗證 Token
-# 這要對應你 GitHub Repo 設定中的 Secret，或是傳送 header 'x-hosino-token' 的內容，他們必須是純隨機的，你可以讓工具給你隨機生成一個，或者你在鍵盤上狂敲一頓
-WEBHOOK_SECRET=your_super_secret_token_here
-
-GAS_URL=你的Google AppScript地址
-```
+請複製```.env.example```的内容到```.env```並進行配置
 
 ---
 
@@ -77,8 +55,8 @@ on:
   workflow_dispatch:
 
 env:
-  TARGET_DIR: "Blog/"
-  WEBHOOK_URL: "https://project-name.vercel.app"
+  TARGET_DIR: "Blog/" # 這裏也要改
+  WEBHOOK_URL: "https://project-name.vercel.app" # 哪個網站可以訪問
 ```
 
 ---
@@ -93,7 +71,7 @@ env:
 
 ---
 
-## 📝 快速啟動
+## 📝 快速部署
 
 1.  **安裝依賴**：
     ```bash
@@ -106,4 +84,8 @@ env:
     node index.js
     ```
 
+## 部署在 Vercel上
+
+## GAS
+將文檔```GAS.js```添加到自己的GAS項目上，部署，（要吃飯了懶得繼續寫了）
 ---
