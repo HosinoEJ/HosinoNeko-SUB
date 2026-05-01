@@ -74,7 +74,7 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
             try{
                 if (user.modSub == true && modified.length > 0 ){//發修改資訊
                     console.log(`M mail to ${user.email}`)
-                    const fileNames = [...modified].join('、');
+                    const fileNames = modified.join('、');
                     await transporter.sendMail({
                         from:`"HosinoNeko"<${from_mail}>`,
                         to: user.email,
@@ -89,7 +89,7 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
                 }
                 if (added.length > 0){
                     console.log(`A mail to ${user.email}`)
-                    const fileNames = [...added].join('、');
+                    const fileNames = added.join('、');
                     await transporter.sendMail({
                         from:`"HosinoNeko"<${from_mail}>`,
                         to: user.email,
