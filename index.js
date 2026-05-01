@@ -106,10 +106,12 @@ app.get('/', (req,res) => {
     res.json({ success: true })
 })
 
-const port = 3000//process.env.PORT
-app.listen(port, '0.0.0.0', () => {
-    console.log(`SERVER 運行在 port ${port}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+    const port = 3000;
+    app.listen(port, '0.0.0.0', () => {
+        console.log(`🚀 本地測試運行在 port ${port}`);
+    });
+}
 
 module.exports = app;
 module.exports.handler = serverless(app);

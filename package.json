@@ -5,5 +5,8 @@
     "fs": "^0.0.1-security",
     "nodemailer": "^8.0.7",
     "path": "^0.12.7"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
