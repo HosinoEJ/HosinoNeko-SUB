@@ -35,24 +35,19 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
 
 
     try {
-        const { added_files, modified_files, compare } = req.body; // 從 body 拿 compare 連結
+        const payload = req.body;
+        const headCommit = payload.head_commit || {};
+        
+        const raw_added = headCommit.added || [];
+        const raw_modified = headCommit.modified || [];
+        const compare = payload.compare || "https://github.com/HosinoEJ/HosinoNeko-SUB";
 
-        // 1. 處理檔名：只取最後一個斜槓後的內容
-        const formatFiles = (filesStr) => {
-            if (!filesStr) return [];
-            return filesStr.split(',')
-                .filter(Boolean)
-                .map(path => path.split('/').pop()); // 這裡把路徑修掉
+            
+        const cleanFileName = (filePath) => {
+            if (typeof filePath !== 'string') return filePath;
+            // 先取最後一個斜槓後的內容，再去掉 .md
+            return filePath.split('/').pop().replace(/\.md$/, '');
         };
-
-        let added
-        let modified
-        if(Array.isArray(added_files) && added_files.length > 0){
-            added = added_files.map(file => formatFiles(file));
-        }else{added = added_files}
-        if(Array.isArray(modified_files) && modified_files.length > 0){
-            modified = modified_files.map(file => formatFiles(file));
-        }else{modified = modified_files}
         
 
         const commitUrl = compare || "https://github.com/HosinoEJ/HosinoNeko-SUB";
