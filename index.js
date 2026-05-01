@@ -61,9 +61,7 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
         const response = await fetch(GAS_URL);
         if (!response.ok) throw new Error('無法獲取訂閱名單');
         const subscribers = await response.json();
-        console.log(subscribers)
         console.log(`找到 ${subscribers.length} 位訂閱者`);
-        for(const user of subscribers) {console.log(user.email)}
 
         for (const user of subscribers) {
             try{
