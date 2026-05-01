@@ -55,7 +55,9 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
         console.log('新增:', added);
         console.log('修改:', modified);
 
-        const subscribers = JSON.parse(await fs.readFile('./sub.json', 'utf-8'));
+        const subPath = path.join(process.cwd(), 'sub.json');
+        const subscribers = JSON.parse(await fs.readFile(subPath, 'utf-8'));
+        console.log(`找到 ${subscribers.length} 位訂閱者`);
 
         for (const user of subscribers) {
             try{
