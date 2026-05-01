@@ -1,7 +1,6 @@
 const express = require('express');
 const nodemailer = require('nodemailer');//郵件
 require('dotenv').config();//ENV
-const fs = require('fs').promises;
 const path = require('path');
 const app = express();
 
@@ -124,7 +123,7 @@ app.get('/test-mail', async (req, res) => {
 });
 
 app.get('/', (req,res) => {
-    res.json({ success: true })
+    res.json({ success: true, by: "HosinoNeko" })
 })
 
 if (process.env.NODE_ENV !== 'production') {
