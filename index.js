@@ -35,21 +35,21 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
 
 
     try {
-        const payload = req.body;
-        const headCommit = payload.head_commit || {};
-        
-        const raw_added = headCommit.added || [];
-        const raw_modified = headCommit.modified || [];
-        const compare = payload.compare || "https://github.com/HosinoEJ/HosinoNeko-SUB";
+        const { added_files, modified_files, compare } = req.body;
 
-
-        const cleanFileName = (filePath) => {
-            if (typeof filePath !== 'string') return filePath;
-            // 先取最後一個斜槓後的內容，再去掉 .md
-            return filePath.split('/').pop().replace(/\.md$/, '');
+        // 2. 建立一個強大的格式化工具
+        const processFiles = (rawStr) => {
+            if (!rawStr || typeof rawStr !== 'string') return [];
+            
+            return rawStr.split(',')         // 1. 依逗號拆分成陣列
+                .filter(Boolean)             // 2. 去除空字串
+                .map(f => f.split('/').pop() // 3. 只拿檔名 (去路徑)
+                           .replace(/\.md$/, '')); // 4. 去掉 .md
         };
-        const added = raw_added.map(cleanFileName);
-        const modified = raw_modified.map(cleanFileName);
+
+        // 3. 得到乾淨的陣列
+        const added = processFiles(added_files);
+        const modified = processFiles(modified_files);
         
 
         const commitUrl = compare || "https://github.com/HosinoEJ/HosinoNeko-SUB";
