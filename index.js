@@ -112,6 +112,5 @@ if (process.env.NODE_ENV !== 'production') {
         console.log(`🚀 本地測試運行在 port ${port}`);
     });
 }
-
+//<--LINE 115
 module.exports = app;
-module.exports.handler = serverless(app);
