@@ -26,6 +26,8 @@ const transporter = nodemailer.createTransport({
 app.post('/api/webhook', async (req, res) => {//github webhook api處理
     const from_mail = process.env.EMAIL_USER;
 
+    const modPost = process.env.MOD_POST === 'true' || false;
+
     //防止有傻逼盜用token
     const token = req.headers['x-hosino-token'];
     if (token !== process.env.WEBHOOK_SECRET) {
@@ -67,7 +69,7 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
 
         for (const user of subscribers) {
             try{
-                if (user.modSub == true && modified.length > 0 ){//發修改資訊
+                if ((user.modSub == true && modified.length > 0 ) && modPost ){//發修改資訊
                     console.log(`M mail to ${user.email}`)
                     const fileNames = [].concat(modified || []).join('、');
                     await transporter.sendMail({
