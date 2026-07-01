@@ -4,6 +4,7 @@ require('dotenv').config();//ENV
 const path = require('path');
 const app = express();
 
+const postOK = false;
 
 
 app.use(express.json());
@@ -69,7 +70,7 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
 
         for (const user of subscribers) {
             try{
-                if ((user.modSub == true && modified.length > 0 ) && modPost ){//發修改資訊
+                if ((user.modSub == true && modified.length > 0 ) && modPost && postOK){//發修改資訊
                     console.log(`M mail to ${user.email}`)
                     const fileNames = [].concat(modified || []).join('、');
                     await transporter.sendMail({
@@ -84,7 +85,7 @@ app.post('/api/webhook', async (req, res) => {//github webhook api處理
                             <p>你的：HosinoNeko</p>`
                     })
                 }
-                if (added.length > 0){
+                if (added.length > 0 && postOK){
                     console.log(`A mail to ${user.email}`)
                     const fileNames = [].concat(added || []).join('、');
                     await transporter.sendMail({
